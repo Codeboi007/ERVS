@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emergency Routing System</title>
+</head>
+<body>
+    <h1>EVRS</h1>
+    <form action="/calculate" method="post">
+        <h3>Vehicle Type:</h3>
+        <select name="vehicle_type">
+            <option value="ambulance">Ambulance</option>
+            <option value="firetruck">Fire Truck</option>
+            <option value="police">Police</option>
+        </select>
+        
+        <h3>Start Node:</h3>
+        <input type="text" name="start" value="HQ">
+        
+        <h3>Nodes (Name X Y [TYPE]):</h3>
+        <textarea name="nodes" rows="10" cols="40" placeholder="">
+HQ 0 0
+A 1 1
+B 2 2 hospital
+C 3 3
+D 1 3 fire-station
+E 2 1 police-station
+F 4 4 hospital
+G 5 5
+H 3 5 fire-station
+I 4 2 police-station
+        </textarea>
+
+        <h3>Edges (Src Dest Weight):</h3>
+        <textarea name="edges" rows="10" cols="40">
+HQ A 2
+A B 3
+B C 4
+C D 1
+D E 5
+E F 2
+F G 3
+G H 2
+H I 4
+        </textarea>
+
+        <br><br>
+        <input type="submit" value="Calculate Route">
+    </form>
+</body>
+</html>

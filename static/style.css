@@ -1,0 +1,69 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+#map {
+    margin: 20px 0;
+    border: 1px solid #CCC;
+    width:100%;
+}
+
+.node {
+    stroke: #333;
+    stroke-width: 2px;
+}
+
+.hospital {
+    fill: #E74C3C;
+}
+
+.fire-station {
+    fill: #F1C40F;
+}
+
+.police-station {
+    fill: #3498DB;
+}
+
+.regular {
+    fill: #999;
+}
+
+.node-label {
+    font-size: 14px;
+    text-anchor: middle;
+    fill: #333;
+}
+
+.vehicle {
+    stroke: white;
+    stroke-width: 2px;
+}
+
+.edge {
+    stroke: #999;
+    stroke-width: 1px;
+}
+
+.edge-label {
+    font-size: 12px;
+    fill: #555;
+}
+
+.route-path {
+    stroke: #999;
+    stroke-width: 3px;
+    fill: none;
+}
+
+.error-text {
+    font-size: 24px;
+    fill: #E74C3C;
+}
+
+.route-path {
+    stroke-width: 3px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
