@@ -24,7 +24,6 @@ class Graph:
 
         # Add to edges_list in input order (store both directions)
         self.edges_list.append({'src': src, 'dest': dest, 'weight': weight})
-        self.edges_list.append({'src': dest, 'dest': src, 'weight': weight})
 
 def dijkstra(graph, start, end=None):
     if start not in graph.nodes:
