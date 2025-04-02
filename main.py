@@ -3,18 +3,14 @@ import heapq
 
 app = Flask(__name__)
 
-@app.route('/')
-def index():
-    return render_template('vehicle_select.html')
-
 class Graph:
     def __init__(self):
-        self.edges = {}          # For quick lookups
+        self.edges = {}          # For quick lookups (bidirectional)
         self.edges_list = []     # Stores edges in input order
         self.nodes = {}
 
     def add_edge(self, src, dest, weight):
-        # Add to edges dictionary (for quick access)
+        # Add to edges dictionary (bidirectional)
         if src not in self.edges:
             self.edges[src] = {}
         self.edges[src][dest] = weight
@@ -22,7 +18,7 @@ class Graph:
             self.edges[dest] = {}
         self.edges[dest][src] = weight
 
-        # Add to edges_list in input order (store both directions)
+        # Add to edges_list only once (user's input direction)
         self.edges_list.append({'src': src, 'dest': dest, 'weight': weight})
 
 def dijkstra(graph, start, end=None):
@@ -61,6 +57,10 @@ def dijkstra(graph, start, end=None):
         return (distances[end], path)
     return (distances, predecessors)
 
+@app.route('/')
+def index():
+    return render_template('vehicle_select.html')
+
 @app.route('/calculate', methods=['POST'])
 def calculate():
     try:
@@ -71,37 +71,53 @@ def calculate():
 
         graph = Graph()
         
-        # Process nodes with hyphenated types
+        # Process nodes
         for line in raw_nodes:
             line = line.strip()
             if not line:
                 continue
             parts = line.split()
+            if len(parts) < 3:
+                return "Error: Invalid node format (ID X Y [TYPE])", 400
             node_id = parts[0]
             x = float(parts[1])
             y = float(parts[2])
             node_type = 'regular'
             if len(parts) > 3:
-                node_type = parts[3].lower().replace(' ', '-')  # Fix: Hyphenate types
+                node_type = parts[3].lower().replace(' ', '-')
             graph.nodes[node_id] = {
                 'x': x,
                 'y': y,
-                'type': node_type  # Now stored as 'fire-station' etc.
+                'type': node_type
             }
+
+        # Validate start node exists
+        if start_node not in graph.nodes:
+            return f"Error: Start node '{start_node}' not found", 400
 
         # Process edges
         for line in raw_edges:
             line = line.strip()
             if not line:
                 continue
-            src, dest, weight = line.split()
+            parts = line.split()
+            if len(parts) < 3:
+                return "Error: Invalid edge format (SRC DEST WEIGHT)", 400
+            src, dest, weight = parts[0], parts[1], parts[2]
+            
+            # Validate nodes exist
+            if src not in graph.nodes:
+                return f"Error: Node '{src}' in edge '{src}-{dest}' not found", 400
+            if dest not in graph.nodes:
+                return f"Error: Node '{dest}' in edge '{src}-{dest}' not found", 400
+
             graph.add_edge(src, dest, int(weight))
 
-        # Map vehicle types to hyphenated destination types
+        # Determine destination type
         destination_type = {
             'ambulance': 'hospital',
-            'firetruck': 'fire-station',  # Fix: Hyphenated type
-            'police': 'police-station'    # Fix: Hyphenated type
+            'firetruck': 'fire-station',
+            'police': 'police-station'
         }[vehicle_type]
 
         # Find all destinations of required type
@@ -125,21 +141,22 @@ def calculate():
         # Prepare data for visualization
         nodes_with_edges = {
             node_id: {
-                'x': data['x'] * 100 + 50,  # Scale coordinates for visualization
+                'x': data['x'] * 100 + 50,
                 'y': data['y'] * 100 + 50,
                 'type': data['type'],
-                'edges': graph.edges.get(node_id, {})
             }
             for node_id, data in graph.nodes.items()
         }
-        edges_data = graph.edges_list  # Pass the edges list to the template
+
         return render_template('result.html',
                                nodes=nodes_with_edges,
                                path=best_path,
-                               edges=edges_data,
                                vehicle_type=vehicle_type,
-                               destination_type=destination_type)
+                               destination_type=destination_type,
+                               edges=graph.edges_list)
 
+    except KeyError as e:
+        return f"Error: {str(e)}. Check vehicle type or destination types", 400
     except Exception as e:
         return f"Error: {str(e)}", 400
 
