@@ -7,15 +7,16 @@
 </head>
 <body>
     <h1>{{ vehicle_type|capitalize }} Route to {{ destination_type|capitalize }}</h1>
-    <svg id="map" width="800" height="600"></svg>
+    <div id="map-container">
+        <svg id="map" width="50" height="50"></svg>
+    </div>
     <script src="{{ url_for('static', filename='animation.js') }}"></script>
     <script>
         const nodes = {{ nodes | tojson | safe }};
         const path = {{ path | tojson | safe }};
-        const edges = {{ edges | tojson | safe }};  <!-- Add this line -->
+        const edges = {{ edges | tojson | safe }};
         const vehicleType = "{{ vehicle_type }}";
-        
-        // Initialize visualization
+
         document.addEventListener('DOMContentLoaded', () => {
             createVisualization('#map', nodes, path, vehicleType, edges);
         });

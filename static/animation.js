@@ -1,6 +1,7 @@
 function createVisualization(selector, nodes, path, vehicleType, edges) {
     const svg = d3.select(selector);
-    
+
+
     // Vehicle color mapping
     const vehicleColors = {
         ambulance: '#E74C3C',
@@ -40,67 +41,115 @@ function createVisualization(selector, nodes, path, vehicleType, edges) {
         .attr('class', 'node-label')
         .style('opacity', (d) => path.includes(d[0]) ? 1 : 0.3);
 
-    // Separate path and non-path edges
-    const nonPathEdges = edges.filter(e => !pathEdges.has(`${e.src}-${e.dest}`));
-    const pathEdgesData = edges.filter(e => pathEdges.has(`${e.src}-${e.dest}`));
+    // Draw edges in both directions while preserving input order
+    edges.forEach(edge => {
+        // Forward direction
+        svg.append('line')
+            .attr('class', 'edge')
+            .attr('x1', nodes[edge.src].x)
+            .attr('y1', nodes[edge.src].y)
+            .attr('x2', nodes[edge.dest].x)
+            .attr('y2', nodes[edge.dest].y)
+            .style('stroke', '#999')
+            .style('stroke-opacity', 0.3)
+            .attr('stroke-width', 1);
 
-    // Draw non-path edges first (lower opacity and thinner lines)
-    svg.selectAll('.edge')
-        .data(nonPathEdges)
-        .enter()
-        .append('line')
-        .attr('class', 'edge')
-        .attr('x1', d => nodes[d.src].x)
-        .attr('y1', d => nodes[d.src].y)
-        .attr('x2', d => nodes[d.dest].x)
-        .attr('y2', d => nodes[d.dest].y)
-        .style('stroke', '#999')
-        .style('stroke-opacity', 0.3)
-        .attr('stroke-width', 1);
+        // Reverse direction (for undirected edges)
+        svg.append('line')
+            .attr('class', 'edge')
+            .attr('x1', nodes[edge.dest].x)
+            .attr('y1', nodes[edge.dest].y)
+            .attr('x2', nodes[edge.src].x)
+            .attr('y2', nodes[edge.src].y)
+            .style('stroke', '#999')
+            .style('stroke-opacity', 0.3)
+            .attr('stroke-width', 1);
+    });
 
-    // Draw path edges last (bold and colored)
-    svg.selectAll('.path-edge')
-        .data(pathEdgesData)
-        .enter()
-        .append('line')
-        .attr('class', 'path-edge')
-        .attr('x1', d => nodes[d.src].x)
-        .attr('y1', d => nodes[d.src].y)
-        .attr('x2', d => nodes[d.dest].x)
-        .attr('y2', d => nodes[d.dest].y)
-        .style('stroke', vehicleColors[vehicleType])
-        .style('stroke-opacity', 1)
-        .attr('stroke-width', 2);
+    // Draw path edges last (on top)
+    edges.forEach(edge => {
+        if (pathEdges.has(`${edge.src}-${edge.dest}`)) {
+            // Forward direction
+            svg.append('line')
+                .attr('class', 'path-edge')
+                .attr('x1', nodes[edge.src].x)
+                .attr('y1', nodes[edge.src].y)
+                .attr('x2', nodes[edge.dest].x)
+                .attr('y2', nodes[edge.dest].y)
+                .style('stroke', vehicleColors[vehicleType])
+                .style('stroke-width', 2);
 
-    // Draw non-path edge labels (dimmed)
-    svg.selectAll('.edge-label')
-        .data(nonPathEdges)
-        .enter()
-        .append('text')
-        .attr('class', 'edge-label')
-        .text(d => d.weight)
-        .attr('x', d => (nodes[d.src].x + nodes[d.dest].x) / 2)
-        .attr('y', d => (nodes[d.src].y + nodes[d.dest].y) / 2)
-        .attr('dy', 5)
-        .attr('text-anchor', 'middle')
-        .attr('font-size', '12px')
-        .style('fill', '#666')
-        .style('opacity', 0.3);
+            // Reverse direction (if needed)
+            if (pathEdges.has(`${edge.dest}-${edge.src}`)) {
+                svg.append('line')
+                    .attr('class', 'path-edge')
+                    .attr('x1', nodes[edge.dest].x)
+                    .attr('y1', nodes[edge.dest].y)
+                    .attr('x2', nodes[edge.src].x)
+                    .attr('y2', nodes[edge.src].y)
+                    .style('stroke', vehicleColors[vehicleType])
+                    .style('stroke-width', 2);
+            }
+        }
+    });
+
+    // Draw edge labels
+    edges.forEach(edge => {
+        // Forward label
+        svg.append('text')
+            .attr('class', 'edge-label')
+            .text(edge.weight)
+            .attr('x', (nodes[edge.src].x + nodes[edge.dest].x) / 2)
+            .attr('y', (nodes[edge.src].y + nodes[edge.dest].y) / 2)
+            .attr('dy', 5)
+            .attr('text-anchor', 'middle')
+            .attr('font-size', '12px')
+            .style('fill', '#666')
+            .style('opacity', 0.3);
+
+        // Reverse label (for undirected edges)
+        svg.append('text')
+            .attr('class', 'edge-label')
+            .text(edge.weight)
+            .attr('x', (nodes[edge.dest].x + nodes[edge.src].x) / 2)
+            .attr('y', (nodes[edge.dest].y + nodes[edge.src].y) / 2)
+            .attr('dy', 5)
+            .attr('text-anchor', 'middle')
+            .attr('font-size', '12px')
+            .style('fill', '#666')
+            .style('opacity', 0.3);
+    });
 
     // Draw path edge labels (bold and colored)
-    svg.selectAll('.path-edge-label')
-        .data(pathEdgesData)
-        .enter()
-        .append('text')
-        .attr('class', 'path-edge-label')
-        .text(d => d.weight)
-        .attr('x', d => (nodes[d.src].x + nodes[d.dest].x) / 2)
-        .attr('y', d => (nodes[d.src].y + nodes[d.dest].y) / 2)
-        .attr('dy', 5)
-        .attr('text-anchor', 'middle')
-        .attr('font-size', '12px')
-        .style('fill', vehicleColors[vehicleType])
-        .style('opacity', 1);
+    edges.forEach(edge => {
+        if (pathEdges.has(`${edge.src}-${edge.dest}`)) {
+            // Forward label
+            svg.append('text')
+                .attr('class', 'path-edge-label')
+                .text(edge.weight)
+                .attr('x', (nodes[edge.src].x + nodes[edge.dest].x) / 2)
+                .attr('y', (nodes[edge.src].y + nodes[edge.dest].y) / 2)
+                .attr('dy', 5)
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px')
+                .style('fill', vehicleColors[vehicleType])
+                .style('opacity', 1);
+
+            // Reverse label (if needed)
+            if (pathEdges.has(`${edge.dest}-${edge.src}`)) {
+                svg.append('text')
+                    .attr('class', 'path-edge-label')
+                    .text(edge.weight)
+                    .attr('x', (nodes[edge.dest].x + nodes[edge.src].x) / 2)
+                    .attr('y', (nodes[edge.dest].y + nodes[edge.src].y) / 2)
+                    .attr('dy', 5)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .style('fill', vehicleColors[vehicleType])
+                    .style('opacity', 1);
+            }
+        }
+    });
 
     // Vehicle animation logic
     if (path.length > 1) {
@@ -132,7 +181,7 @@ function createVisualization(selector, nodes, path, vehicleType, edges) {
 
             vehicle.attr('cx', x).attr('cy', y);
 
-            progress += 1; // Adjust speed by changing this value
+            progress += 2; // Adjust speed by changing this value
             
             if (progress > 100) {
                 currentSegment++;
