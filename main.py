@@ -5,12 +5,12 @@ app = Flask(__name__)
 
 class Graph:
     def __init__(self):
-        self.edges = {}          # For quick lookups (bidirectional)
-        self.edges_list = []     # Stores edges in input order
+        self.edges = {}          
+        self.edges_list = []     
         self.nodes = {}
 
     def add_edge(self, src, dest, weight):
-        # Add to edges dictionary (bidirectional)
+        
         if src not in self.edges:
             self.edges[src] = {}
         self.edges[src][dest] = weight
@@ -18,8 +18,9 @@ class Graph:
             self.edges[dest] = {}
         self.edges[dest][src] = weight
 
-        # Add to edges_list only once (user's input direction)
         self.edges_list.append({'src': src, 'dest': dest, 'weight': weight})
+
+
 
 def dijkstra(graph, start, end=None):
     if start not in graph.nodes:
@@ -71,7 +72,6 @@ def calculate():
 
         graph = Graph()
         
-        # Process nodes
         for line in raw_nodes:
             line = line.strip()
             if not line:
@@ -91,11 +91,11 @@ def calculate():
                 'type': node_type
             }
 
-        # Validate start node exists
+        
         if start_node not in graph.nodes:
             return f"Error: Start node '{start_node}' not found", 400
 
-        # Process edges
+        
         for line in raw_edges:
             line = line.strip()
             if not line:
@@ -105,7 +105,7 @@ def calculate():
                 return "Error: Invalid edge format (SRC DEST WEIGHT)", 400
             src, dest, weight = parts[0], parts[1], parts[2]
             
-            # Validate nodes exist
+            
             if src not in graph.nodes:
                 return f"Error: Node '{src}' in edge '{src}-{dest}' not found", 400
             if dest not in graph.nodes:
@@ -113,20 +113,20 @@ def calculate():
 
             graph.add_edge(src, dest, int(weight))
 
-        # Determine destination type
+        
         destination_type = {
             'ambulance': 'hospital',
             'firetruck': 'fire-station',
             'police': 'police-station'
         }[vehicle_type]
 
-        # Find all destinations of required type
+        
         destinations = [
             node_id for node_id, data in graph.nodes.items() 
             if data['type'] == destination_type
         ]
 
-        # Find shortest path to nearest destination
+        
         shortest_distance = float('inf')
         best_path = []
         for dest in destinations:
@@ -138,7 +138,7 @@ def calculate():
         if not best_path:
             return "No path found to any destination", 400
 
-        # Prepare data for visualization
+        
         nodes_with_edges = {
             node_id: {
                 'x': data['x'] * 100 + 50,
