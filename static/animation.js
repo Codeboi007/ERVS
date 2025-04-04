@@ -4,8 +4,8 @@ function createVisualization(selector, nodes, path, vehicleType, edges) {
 
     // Vehicle color mapping
     const vehicleColors = {
-        ambulance: '#E74C3C',
-        firetruck: '#F1C40F',
+        ambulance: '#DC143C',
+        firetruck: '#aa4203',
         police: '#3498DB'
     };
 
