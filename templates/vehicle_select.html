@@ -20,142 +20,73 @@
             </div>
             <div class="form-group">
                 <label for="start">Start Node:</label>
-                <input type="text" id="start" name="start" value="HQ" required>
+                <input type="text" id="start" name="start" value="Vadgaon" required>
             </div>
             <div class="form-group">
                 <label for="nodes">Nodes (ID X Y [TYPE]):</label>
-                <textarea id="nodes" name="nodes" rows="10" cols="40" required>
-HQ 0 0
-A 2 0
-B 4 0
-C 6 0
-D 8 0
-E 10 0 hospital
-F 0 2
-G 2 2
-H 4 2
-I 6 2
-J 8 2
-K 10 2 fire-station
-L 0 4
-M 2 4
-N 4 4
-O 6 4
-P 8 4
-Q 10 4
-R 0 6
-S 2 6
-T 4 6
-U 6 6
-V 8 6
-W 10 6
-X 0 8
-Y 2 8
-Z 4 8
-AA 6 8
-AB 8 8
-AC 10 8 police-station
-                </textarea>
+                <textarea id="nodes" name="nodes" rows="10" cols="40" required>Vadgaon 0 0 regular
+Gandhi_Nagar 2 1 regular
+Fort_Area 4 3 regular
+Camp_Area 6 1 regular
+Tilakwadi 8 4 regular
+Yellur_Hospital 10 2 hospital
+Shahapur 1 3 regular
+Raybag 5 2 regular
+Chikkalasangi 7 6 regular
+Rajaji_Nagar 9 3 regular
+Bailhongal_Fire_Station 11 5 fire-station
+Ganeshpur 1 6 regular
+Angadi_Colony 3 8 regular
+Kagwad 5 7 regular
+Sankrali_Police_Station 7 9 police-station
+Ambika_Nagar 9 8 regular
+Udyambag_Police_Station 11 10 police-station
+Gokul_Road 2 10 regular
+Khasbhag 4 12 regular
+Vashi_Nagar 6 11 regular
+Ashok_Nagar 8 13 regular
+Nandi_Garden 10 12 regular
+Kittur_Rani_Chennamma_Hospital 12 14 hospital                
+</textarea>
             </div>
             <div class="form-group">
                 <label for="edges">Edges (Src Dest Weight):</label>
                 <textarea id="edges" name="edges" rows="10" cols="40" required>
-HQ A 5
-A B 3
-B C 2
-C D 4
-D E 3
-F G 4
-G H 2
-H I 3
-I J 4
-J K 3
-L M 5
-M N 3
-N O 2
-O P 4
-P Q 3
-R S 4
-S T 2
-T U 3
-U V 4
-V W 3
-X Y 5
-Y Z 3
-Z AA 2
-AA AB 3
-AB AC 4
-HQ F 7
-A G 4
-B H 2
-C I 3
-D J 4
-E K 3
-F L 5
-G M 3
-H N 2
-I O 4
-J P 3
-K Q 4
-L R 5
-M S 3
-N T 2
-O U 4
-P V 3
-Q W 4
-R X 5
-S Y 3
-T Z 2
-U AA 3
-V AB 4
-W AC 3
-A L 6
-B M 4
-C N 2
-D O 3
-E P 4
-F R 5
-G S 3
-H T 2
-I U 4
-J V 3
-K W 4
-L X 5
-M Y 3
-N Z 2
-O AA 4
-P AB 3
-Q AC 4
-A R 7
-B S 5
-C T 3
-D U 2
-E V 4
-F W 5
-G X 3
-H Y 2
-I Z 4
-J AA 3
-K AB 4
-L AC 5
-M W 6
-N AC 4
-O AB 3
-P AA 2
-Q Z 4
-R Y 5
-S X 3
-T W 2
-U AC 4
-V AB 3
-W AA 2
-X S 5
-Y R 3
-Z O 2
-AA N 4
-AB I 3
-AC E 4
-                </textarea>
+Vadgaon Gandhi_Nagar 3
+Vadgaon Shahapur 4
+Gandhi_Nagar Fort_Area 2
+Gandhi_Nagar Raybag 3
+Fort_Area Camp_Area 4
+Fort_Area Raybag 2
+Camp_Area Tilakwadi 3
+Camp_Area Chikkalasangi 5
+Tilakwadi Yellur_Hospital 4
+Tilakwadi Rajaji_Nagar 3
+Yellur_Hospital Bailhongal_Fire_Station 5
+Shahapur Ganeshpur 3
+Shahapur Angadi_Colony 2
+Angadi_Colony Kagwad 2
+Angadi_Colony Khasbhag 5
+Raybag Chikkalasangi 2
+Raybag Kagwad 3
+Chikkalasangi Sankrali_Police_Station 5
+Chikkalasangi Rajaji_Nagar 4
+Rajaji_Nagar Ambika_Nagar 4
+Rajaji_Nagar Bailhongal_Fire_Station 3
+Bailhongal_Fire_Station Udyambag_Police_Station 5
+Ganeshpur Gokul_Road 4
+Kagwad Vashi_Nagar 4
+Kagwad Sankrali_Police_Station 3
+Sankrali_Police_Station Ambika_Nagar 2
+Sankrali_Police_Station Ashok_Nagar 5
+Ambika_Nagar Udyambag_Police_Station 3
+Ambika_Nagar Nandi_Garden 4
+Udyambag_Police_Station Kittur_Rani_Chennamma_Hospital 5
+Gokul_Road Khasbhag 3
+Khasbhag Vashi_Nagar 2
+Vashi_Nagar Ashok_Nagar 3
+Ashok_Nagar Nandi_Garden 2
+Nandi_Garden Kittur_Rani_Chennamma_Hospital 3               </textarea>
             </div>
             <button type="submit">Calculate Route</button>
         </form>
