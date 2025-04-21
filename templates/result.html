@@ -8,7 +8,7 @@
 <body>
     <h1>{{ vehicle_type|capitalize }} Route to {{ destination_type|capitalize }}</h1>
     <div id="map-container">
-        <svg id="map" width="50" height="50"></svg>
+        <svg id="map" class="map" width="50" height="50"></svg>
     </div>
     <script src="{{ url_for('static', filename='animation.js') }}"></script>
     <script>
