@@ -72,12 +72,12 @@ button:hover {
 
 
 
-#map {
+
+.map {
     width: 100%;
     height: 100%;
-    margin: 100px;
+    padding-left: 500px;
 }
-
 /* Node and Edge Styles */
 .node {
     stroke: #333;
